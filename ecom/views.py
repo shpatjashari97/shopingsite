@@ -556,3 +556,32 @@ def contactus_view(request):
             send_mail(str(name)+' || '+str(email),message, settings.EMAIL_HOST_USER, settings.EMAIL_RECEIVING_USER, fail_silently = False)
             return render(request, 'ecom/contactussuccess.html')
     return render(request, 'ecom/contactus.html', {'form':sub})
+from django.shortcuts import render, redirect
+from paysera_webtopay import Webtopay
+
+
+def initiate_payment(request):
+    # ... payment logic (calculate amount, items, etc.)
+
+    paysera = Webtopay(project_id=PAYSERA_PROJECT_ID, project_secret=PAYSERA_PROJECT_SECRET)
+
+    payment = paysera.create_payment(
+        payment_amount=payment_amount,  # Replace with your calculated amount
+        currency="EUR",  # Adjust currency as needed
+        payment_name="Your Product or Service",
+        test_mode=True if settings.DEBUG else False,  # Set to False for production
+        success_url=reverse('payments:payment_success'),
+        cancel_url=reverse('payments:payment_cancel'),
+        # ... other payment details (optional)
+    )
+
+    return render(request, 'payment_form.html', {'payment_url': payment.get('url')})
+
+
+from django.shortcuts import render
+
+def payment_success(request):
+    return render(request, 'payment_success.html')
+
+def payment_cancel(request):
+    return render(request, 'payment_cancel.html')

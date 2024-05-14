@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Form</title>
+</head>
+<body>
+    <p>Redirecting to Paysera...</p>
+    <form id="payment_form" action="{{ payment_url }}" method="post">
+        <input type="hidden" name="data" value="{{ payment_url }}">
+        <script>document.getElementById('payment_form').submit();</script>
+    </form>
+</body>
+</html>
